@@ -1,0 +1,9 @@
+[
+  {
+    "version": "v24.10-SNAPSHOT.r33791",
+    "date": "2026-01-22",
+    "kernel": "6.6.121",
+    "description": "首次发布基于最新24.10快照版本,支持tubroacc加速,ddns-go,upnp,网页终端,定时重启,文件管理等基础功能,提供部分kmod下载",
+    "is_stable": false
+  }
+]

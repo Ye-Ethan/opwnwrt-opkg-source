@@ -1,0 +1,11 @@
+{
+  "versions": [
+    {
+      "kernel": "6.6.121",
+      "hash": "280a0fbab61db5479fcef3cc180b190d",
+      "path": "v24.10-SNAPSHOT.r33791",
+      "date": "2026-01-22",
+      "description": "对应固件 r33791-ab7ab3554d"
+    }
+  ]
+}

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>软件仓库概览 - ImmortalWrt Packages</title>
+    <style>
+        :root { --primary: #8b5cf6; --primary-hover: #7c3aed; --bg: #f8fafc; --surface: #ffffff; --text: #334155; --border: #e2e8f0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; line-height: 1.6; }
+        .container { max-width: 1100px; margin: 0 auto; padding: 40px 20px; }
+        
+        /* 导航头 */
+        .header { border-bottom: 1px solid var(--border); padding-bottom: 20px; margin-bottom: 40px; }
+        .nav-link { text-decoration: none; color: var(--primary); font-weight: 500; display: inline-flex; align-items: center; gap: 5px; margin-bottom: 10px; }
+        .header h1 { margin: 0; font-size: 1.8rem; color: #0f172a; }
+        .header p { color: #64748b; margin-top: 5px; }
+
+        /* 卡片 */
+        .card { background: var(--surface); border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); padding: 25px; margin-bottom: 25px; border: 1px solid var(--border); }
+        .card h2 { margin-top: 0; font-size: 1.25rem; border-bottom: 1px solid var(--bg); padding-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+        
+        /* 列表网格 */
+        .feed-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+        .feed-item { background: #f8fafc; border: 1px solid var(--border); border-radius: 8px; padding: 15px; transition: all 0.2s; }
+        .feed-item:hover { border-color: var(--primary); transform: translateY(-2px); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+        
+        .feed-name { font-family: monospace; font-size: 1.1rem; font-weight: bold; color: var(--primary); margin-bottom: 5px; display: block; }
+        .feed-desc { font-size: 0.9rem; color: #64748b; margin-bottom: 10px; height: 40px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+        .feed-meta { font-size: 0.8rem; color: #94a3b8; display: flex; justify-content: space-between; align-items: center; }
+        .badge-count { background: #e2e8f0; padding: 2px 8px; border-radius: 99px; }
+
+        /* Kmod 列表 (紧凑型) */
+        .kmod-list { display: flex; flex-direction: column; gap: 10px; }
+        .kmod-row { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #f1f5f9; }
+        .kmod-row:last-child { border-bottom: none; }
+        .kmod-ver { font-family: monospace; font-weight: bold; color: #0f172a; }
+        .hash-code { font-family: monospace; background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-size: 0.85rem; color: #64748b; }
+
+        /* 代码配置区 */
+        .config-area { background: #1e293b; color: #e2e8f0; padding: 20px; border-radius: 8px; overflow-x: auto; font-family: "JetBrains Mono", monospace; margin-top: 15px; position: relative; }
+        .copy-btn { position: absolute; top: 10px; right: 10px; background: rgba(255,255,255,0.1); border: none; color: white; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; }
+        .copy-btn:hover { background: rgba(255,255,255,0.2); }
+        #config-code {
+            display: block;          /* 让代码块变成块级元素，独占一行 */
+            white-space: pre;        /* 【关键】保留所有的空格和换行符，不自动合并 */
+            font-family: "JetBrains Mono", Consolas, monospace; /* 保持等宽字体 */
+            line-height: 1.5;        /* 增加行高，让代码更易读 */
+        }
+
+        /* 状态指示 */
+        #loading { text-align: center; color: #64748b; padding: 40px; }
+        .arch-tag { display: inline-block; background: #ede9fe; color: #5b21b6; padding: 4px 12px; border-radius: 6px; font-family: monospace; font-size: 0.9rem; margin-top: 10px; }
+        footer { margin-top: 40px; border-top: 1px solid var(--border); padding-top: 20px; text-align: center; color: #94a3b8; font-size: 0.85rem; }
+        .build-info { font-family: monospace; margin-bottom: 5px; }
+        .build-info a { color: inherit; text-decoration: none; border-bottom: 1px dashed #cbd5e1; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <a href="/" class="nav-link">← 返回首页</a>
+        <h1>📦 软件仓库大厅</h1>
+        <p>这里托管了 ImmortalWrt 的一些应用软件包与内核模块。</p>
+        <span id="current-arch" class="arch-tag">正在检测架构...</span>
+    </div>
+
+    <div id="loading">正在加载仓库索引...</div>
+
+    <div id="main-content" style="display: none;">
+        
+        <div class="card">
+            <h2>🧩 通用架构仓库 (Architecture Feeds)</h2>
+            <div id="feeds-container" class="feed-grid">
+                </div>
+            <div style="margin-top: 20px; text-align: right; font-size: 0.9rem; color: #64748b;">
+                更新于: <span id="feed-update-time">-</span>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>⚙️ 内核模块存档 (Kernel Modules)</h2>
+            <p style="font-size: 0.9rem; color: #64748b; margin-bottom: 15px;">
+                内核模块严格绑定内核版本 Hash。请根据你的固件版本选择对应的源。
+            </p>
+            <div id="kmods-container" class="kmod-list">
+                </div>
+        </div>
+
+        <div class="card">
+            <h2>🛠️ 配置指南 (distfeeds.conf)</h2>
+            <p>如果你不想使用固件自带的配置，可以使用以下模板。请注意替换 URL 为当前域名。</p>
+            
+            <div class="config-area">
+                <button class="copy-btn" onclick="copyConfig()">复制</button>
+                <code id="config-code">
+# 通用软件源 (Base/LuCI/Packages)
+src/gz custom_base http://DOMAIN/packages/aarch64_cortex-a53/base
+src/gz custom_luci http://DOMAIN/packages/aarch64_cortex-a53/luci
+...
+
+# 内核模块源 (请根据固件版本选择其一)
+# src/gz custom_core http://DOMAIN/packages/kmods/v24.10.r33791
+                </code>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <div id="version-info" class="build-info" style="margin-top: 10px;">
+            <span>Build: <a href="#" id="commit-link">Checking...</a></span>
+            <span style="margin: 0 8px;">•</span>
+            <span id="update-date">...</span>
+        </div>
+        &copy; 2026 Ethan | Powered by GitHub Pages
+    </footer>
+</div>
+
+<script>
+    const DEFAULT_ARCH = "aarch64_cortex-a53";
+    const CONFIG = {
+        githubUser: 'Ye-Ethan',
+        githubRepo: 'opwnwrt-opkg-source',                 
+    }
+
+    window.onload = async () => {
+        try {
+            await loadData();
+        } catch (e) {
+            document.getElementById('loading').textContent = "加载失败: " + e.message;
+        }
+        try {
+            fetchGitHubInfo();
+        } catch {
+            //隐藏version-info
+            document.getElementById('version-info').style.display = 'none';
+        }
+    };
+
+    async function loadData() {
+        // 1. 加载通用包列表
+        const feedUrl = `${DEFAULT_ARCH}/list.json`;
+        const feedRes = await fetch(feedUrl);
+        if (!feedRes.ok) throw new Error("无法加载通用包列表");
+        const feedData = await feedRes.json();
+
+        // 2. 加载 Kmod 列表
+        const kmodUrl = `kmods/list.json`;
+        const kmodRes = await fetch(kmodUrl);
+        // kmod 列表允许不存在（如果不报错的话）
+        const kmodData = kmodRes.ok ? await kmodRes.json() : { versions: [] };
+
+        renderPage(feedData, kmodData);
+    }
+
+    function renderPage(feedData, kmodData) {
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('main-content').style.display = 'block';
+        
+        // 设置架构标签
+        document.getElementById('current-arch').textContent = feedData.arch;
+        document.getElementById('feed-update-time').textContent = feedData.updated_at;
+
+        // 渲染 Feeds
+        const feedContainer = document.getElementById('feeds-container');
+        feedData.feeds.forEach(feed => {
+            const div = document.createElement('div');
+            div.className = 'feed-item';
+        
+            div.onclick = () => {
+                const repoPath = `${feedData.arch}/${feed.path}`;
+                window.location.href = `view.html?repo=${encodeURIComponent(repoPath)}`;
+            };
+            div.style.cursor = 'pointer';
+
+            div.innerHTML = `
+                <span class="feed-name">${feed.name}</span>
+                <div class="feed-desc">${feed.description}</div>
+                <div class="feed-meta">
+                    <span>📂 /${feed.path}</span>
+                    <span class="badge-count">${feed.package_count || '?'} pkgs</span>
+                </div>
+            `;
+            feedContainer.appendChild(div);
+        });
+
+        // 渲染 Kmods
+        const kmodContainer = document.getElementById('kmods-container');
+        if (kmodData.versions.length === 0) {
+            kmodContainer.innerHTML = '<div style="padding:10px; color:#94a3b8;">暂无内核模块索引</div>';
+        } else {
+            // 取前 5 个，避免太长
+            kmodData.versions.slice(0, 5).forEach(ver => {
+                const row = document.createElement('div');
+                row.className = 'kmod-row';
+                const shortHash = ver.hash.substring(0, 8);
+                const repoPath = `kmods/${ver.path}`;
+                
+                row.innerHTML = `
+                    <div>
+                        <div class="kmod-ver">Kernel ${ver.kernel}</div>
+                        <div style="font-size:0.8rem; color:#64748b;">${ver.description} (${ver.date})</div>
+                    </div>
+                    <div style="text-align:right;">
+                        <span class="hash-code" title="${ver.hash}">Hash: ${shortHash}...</span>
+                        <div style="margin-top:4px;">
+                            <a href="view.html?repo=${encodeURIComponent(repoPath)}" style="...">浏览文件</a>
+                        </div>
+                    </div>
+                `;
+                kmodContainer.appendChild(row);
+            });
+        }
+
+        // 生成配置代码
+        generateConfig(feedData, kmodData);
+    }
+
+    function generateConfig(feedData, kmodData) {
+        const origin = window.location.origin + window.location.pathname.replace('index.html', '').replace(/\/$/, '');
+        const archUrl = `${origin}/${feedData.arch}`;
+        
+        let code = `# 自动生成的配置 (Architecture: ${feedData.arch})\n\n`;
+        
+        // 生成通用源
+        feedData.feeds.forEach(feed => {
+            code += `src/gz custom_${feed.name} ${archUrl}/${feed.path}\n`;
+        });
+
+        code += `\n# --- 内核模块源 (请取消注释对应你当前内核的一行) ---\n`;
+        
+        if (kmodData.versions.length > 0) {
+            kmodData.versions.forEach((ver, index) => {
+                const prefix = index === 0 ? '' : '# '; // 默认只把最新的去掉注释不太好，内核必须精确，所以建议全部注释让用户选
+                code += `# Kernel ${ver.kernel} (Hash: ${ver.hash.substring(0,8)}...)\n`;
+                code += `# src/gz custom_core ${origin}/kmods/${ver.path}\n`;
+            });
+        } else {
+            code += `# 暂无内核模块源\n`;
+        }
+
+        document.getElementById('config-code').textContent = code;
+    }
+
+    function copyConfig() {
+        const text = document.getElementById('config-code').textContent;
+        navigator.clipboard.writeText(text).then(() => alert('配置已复制！'));
+    }
+    function fetchGitHubInfo() {
+        fetch(`https://api.github.com/repos/${CONFIG.githubUser}/${CONFIG.githubRepo}/commits?per_page=1`)
+            .then(r => r.ok ? r.json() : null)
+            .then(data => {
+                if (!data || !data[0]) return;
+                const commit = data[0];
+                const date = new Date(commit.commit.committer.date).toLocaleString();
+                
+                document.getElementById('commit-link').textContent = commit.sha.substring(0, 7);
+                document.getElementById('commit-link').href = commit.html_url;
+                document.getElementById('update-date').textContent = date;
+            })
+            .catch(() => {});
+    }
+</script>
+
+</body>
+</html>

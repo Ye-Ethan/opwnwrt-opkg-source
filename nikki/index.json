@@ -1,9 +1,0 @@
-{
-  "version": 2,
-  "architecture": "aarch64_cortex-a53",
-  "packages": {
-    "luci-app-nikki": "1.25.0-r1",
-    "luci-i18n-nikki-zh-cn": "26.019.25085~4fb4df4",
-    "nikki": "2026.01.16-r1"
-  }
-}

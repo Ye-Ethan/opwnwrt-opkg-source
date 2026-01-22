@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>仓库浏览 - Packages Viewer</title>
+    <style>
+        :root { --primary: #2563eb; --bg: #f8fafc; --surface: #ffffff; --text: #334155; --border: #e2e8f0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text); padding: 20px; line-height: 1.5; }
+        
+        .container { max-width: 1000px; margin: 0 auto; background: var(--surface); padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+        
+        /* 头部 */
+        .header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--bg); padding-bottom: 20px; margin-bottom: 20px; gap: 10px; }
+        .header h1 { margin: 0; font-size: 1.5rem; color: #0f172a; display: flex; align-items: center; gap: 10px; }
+        .repo-badge { font-size: 0.9rem; background: #e0f2fe; color: #0284c7; padding: 4px 10px; border-radius: 6px; font-family: monospace; }
+        .back-link { text-decoration: none; color: #64748b; font-weight: 500; font-size: 0.95rem; transition: color 0.2s; }
+        .back-link:hover { color: var(--primary); }
+        
+        /* 搜索框 */
+        .search-box { position: relative; margin-bottom: 20px; }
+        #search { width: 100%; padding: 12px 15px; padding-left: 40px; font-size: 16px; border: 2px solid var(--border); border-radius: 8px; box-sizing: border-box; transition: border-color 0.2s; outline: none; }
+        #search:focus { border-color: var(--primary); }
+        .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #94a3b8; }
+        .search-stats { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); font-size: 0.85rem; color: #94a3b8; }
+
+        /* 表格样式 */
+        .table-container { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; min-width: 600px; }
+        th { text-align: left; padding: 12px; color: #64748b; font-weight: 600; border-bottom: 2px solid var(--border); font-size: 0.9rem; }
+        td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+        tr:hover { background-color: #f1f5f9; }
+        
+        .pkg-name { color: #0f172a; font-weight: 600; font-family: "JetBrains Mono", monospace; font-size: 1rem; }
+        .pkg-ver { color: #64748b; font-family: monospace; font-size: 0.9rem; }
+        
+        /* 按钮组 */
+        .action-group { display: flex; gap: 8px; justify-content: flex-end; }
+        .btn { display: inline-flex; align-items: center; padding: 6px 12px; border-radius: 6px; text-decoration: none; font-size: 0.85rem; font-weight: 500; transition: all 0.2s; border: none; cursor: pointer; }
+        .btn-download { background: #eff6ff; color: var(--primary); }
+        .btn-download:hover { background: var(--primary); color: white; }
+        .btn-copy { background: #f1f5f9; color: #64748b; }
+        .btn-copy:hover { background: #e2e8f0; color: #334155; }
+
+        /* 状态提示 */
+        .status-msg { text-align: center; padding: 50px; color: #94a3b8; }
+        .error { color: #ef4444; background: #fee2e2; padding: 15px; border-radius: 8px; text-align: center; }
+
+        /* 页脚 */
+        footer { margin-top: 40px; border-top: 1px solid var(--border); padding-top: 20px; text-align: center; color: #94a3b8; font-size: 0.85rem; }
+        .build-info { font-family: monospace; margin-bottom: 5px; }
+        .build-info a { color: inherit; text-decoration: none; border-bottom: 1px dashed #cbd5e1; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>
+            📦 仓库浏览 
+            <span id="repo-badge" class="repo-badge" style="display:none">...</span>
+        </h1>
+        <a href="index.html" class="back-link">← 返回大厅</a>
+    </div>
+
+    <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="search" placeholder="输入包名搜索 (支持正则)..." autocomplete="off">
+        <span id="result-count" class="search-stats"></span>
+    </div>
+
+    <div id="content" class="table-container">
+        <div class="status-msg">正在加载索引文件...</div>
+    </div>
+
+    <footer>
+        <div id="version-info" class="build-info">
+            <span>Build: <a href="#" id="commit-link">Checking...</a></span>
+            <span style="margin: 0 8px;">•</span>
+            <span id="update-date">...</span>
+        </div>
+        &copy; 2026 Ethan | Powered by GitHub Pages
+    </footer>
+</div>
+
+<script>
+    // 配置部分
+    const CONFIG = {
+        githubUser: 'Ye-Ethan',
+        githubRepo: 'opwnwrt-opkg-source', // 替换为真实仓库名
+        jsonFileName: 'index.json' // 你的索引文件名
+    };
+
+    // 全局数据缓存
+    let allPackages = [];
+    let currentRepoPath = '';
+
+    // 初始化
+    window.onload = async () => {
+        // 1. 获取 URL 参数
+        const params = new URLSearchParams(window.location.search);
+        const repoPath = params.get('repo'); // 例如: packages/aarch64_cortex-a53/base
+        
+        if (!repoPath) {
+            showError("错误：URL 中未指定仓库路径 (例如 ?repo=base)");
+            return;
+        }
+
+        currentRepoPath = repoPath.replace(/\/$/, ''); // 去除末尾斜杠
+        
+        // 更新标题
+        const shortName = currentRepoPath.split('/').pop();
+        document.title = `${shortName} - Packages`;
+        const badge = document.getElementById('repo-badge');
+        badge.textContent = shortName;
+        badge.style.display = 'inline-block';
+
+        // 2. 加载数据
+        await loadPackageData(currentRepoPath);
+
+        // 3. 绑定搜索事件
+        document.getElementById('search').addEventListener('input', (e) => filterPackages(e.target.value));
+
+        // 4. 获取 GitHub 版本信息
+        fetchGitHubInfo();
+    };
+
+    async function loadPackageData(path) {
+        try {
+            // 拼接 index.json 路径
+            const url = `${path}/${CONFIG.jsonFileName}`;
+            const res = await fetch(url);
+            
+            if (!res.ok) throw new Error(`无法找到索引文件 (${res.status})`);
+            
+            const data = await res.json();
+            
+            // 数据预处理
+            const arch = data.architecture || 'all';
+            
+            // 兼容两种格式：
+            // 格式 A: { packages: { "name": "version", ... } } (简单KV)
+            // 格式 B: { packages: [ {name:..., version:...}, ... ] } (数组)
+            
+            if (Array.isArray(data.packages)) {
+                allPackages = data.packages.map(p => ({
+                    name: p.name,
+                    version: p.version,
+                    filename: p.filename || `${p.name}_${p.version}_${arch}.ipk`
+                }));
+            } else {
+                allPackages = Object.keys(data.packages).map(name => ({
+                    name: name,
+                    version: data.packages[name],
+                    filename: `${name}_${data.packages[name]}_${arch}.ipk`
+                }));
+            }
+
+            // 排序
+            allPackages.sort((a, b) => a.name.localeCompare(b.name));
+            
+            // 渲染
+            renderTable(allPackages);
+            updateStats(allPackages.length);
+
+        } catch (e) {
+            showError(`加载失败: ${e.message}<br><small>请确保 '${path}/${CONFIG.jsonFileName}' 存在且格式正确</small>`);
+        }
+    }
+
+    function renderTable(pkgs) {
+        const container = document.getElementById('content');
+        
+        if (pkgs.length === 0) {
+            container.innerHTML = '<div class="status-msg">未找到匹配的软件包</div>';
+            return;
+        }
+
+        // 限制渲染数量以防卡顿 (特别是几千个包时)
+        const displayPkgs = pkgs.slice(0, 500); // 首次只渲染前500个，实际生产中可以做分页，这里简单处理
+        const hasMore = pkgs.length > 500;
+
+        let html = `
+            <table>
+                <thead>
+                    <tr>
+                        <th>软件包名称</th>
+                        <th>版本</th>
+                        <th style="text-align:right">操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+        `;
+
+        displayPkgs.forEach(pkg => {
+            const downloadUrl = `${currentRepoPath}/${pkg.filename}`;
+            html += `
+                <tr>
+                    <td class="pkg-name">${pkg.name}</td>
+                    <td class="pkg-ver">${pkg.version}</td>
+                    <td style="text-align:right">
+                        <div class="action-group">
+                            <button class="btn btn-copy" onclick="copyText('${pkg.name}')" title="复制包名">📄</button>
+                            <a href="${downloadUrl}" class="btn btn-download" download>⬇ 下载</a>
+                        </div>
+                    </td>
+                </tr>
+            `;
+        });
+
+        html += '</tbody></table>';
+        if (hasMore) {
+            html += `<div style="text-align:center; padding:10px; color:#94a3b8; font-size:0.9rem;">仅显示前 500 个结果，请使用搜索查找更多...</div>`;
+        }
+        
+        container.innerHTML = html;
+    }
+
+    function filterPackages(query) {
+        query = query.toLowerCase().trim();
+        
+        if (!query) {
+            renderTable(allPackages);
+            updateStats(allPackages.length);
+            return;
+        }
+
+        const filtered = allPackages.filter(p => 
+            p.name.toLowerCase().includes(query) || 
+            p.filename.toLowerCase().includes(query)
+        );
+
+        renderTable(filtered);
+        updateStats(filtered.length);
+    }
+
+    function updateStats(count) {
+        document.getElementById('result-count').textContent = `共 ${count} 个包`;
+    }
+
+    function copyText(text) {
+        navigator.clipboard.writeText(text).then(() => {
+            alert(`已复制: ${text}`);
+        });
+    }
+
+    function showError(msg) {
+        document.getElementById('content').innerHTML = `<div class="error">${msg}</div>`;
+    }
+
+    // GitHub API 集成
+    function fetchGitHubInfo() {
+        fetch(`https://api.github.com/repos/${CONFIG.githubUser}/${CONFIG.githubRepo}/commits?per_page=1`)
+            .then(r => r.ok ? r.json() : null)
+            .then(data => {
+                if (!data || !data[0]) return;
+                const commit = data[0];
+                const date = new Date(commit.commit.committer.date).toLocaleString();
+                
+                document.getElementById('commit-link').textContent = commit.sha.substring(0, 7);
+                document.getElementById('commit-link').href = commit.html_url;
+                document.getElementById('update-date').textContent = date;
+            })
+            .catch(() => {});
+    }
+</script>
+
+</body>
+</html>

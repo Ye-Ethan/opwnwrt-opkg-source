@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>固件下载 - ImmortalWrt Images</title>
+    <style>
+        :root { --primary: #0ea5e9; --bg: #f8fafc; --surface: #ffffff; --text: #334155; --border: #e2e8f0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; line-height: 1.6; }
+        
+        /* 布局容器 */
+        .container { max-width: 1100px; margin: 0 auto; padding: 40px 20px; }
+        
+        /* 头部导航 */
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; border-bottom: 1px solid var(--border); padding-bottom: 20px; }
+        .header h1 { margin: 0; font-size: 1.8rem; color: #0f172a; }
+        .nav-link { text-decoration: none; color: var(--primary); font-weight: 500; display: flex; align-items: center; gap: 5px; }
+        .nav-link:hover { text-decoration: underline; }
+
+        /* 卡片样式 */
+        .card { background: var(--surface); border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); padding: 30px; margin-bottom: 30px; border: 1px solid var(--border); }
+        .card-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 20px; border-bottom: 1px solid var(--bg); padding-bottom: 15px; }
+        .card-header h2 { margin: 0; font-size: 1.25rem; }
+        .version-badge { background: #dbeafe; color: #1e40af; padding: 4px 12px; border-radius: 99px; font-family: monospace; font-size: 0.9rem; font-weight: bold; }
+
+        /* 信息网格 */
+        .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 20px; }
+        .info-item label { display: block; font-size: 0.85rem; color: #64748b; margin-bottom: 4px; }
+        .info-item span { font-weight: 600; color: #0f172a; font-family: monospace; font-size: 1rem; }
+
+        /* 设备选择器 */
+        .device-selector { margin-bottom: 25px; }
+        .device-selector select { width: 100%; padding: 12px; border: 2px solid var(--border); border-radius: 8px; font-size: 1rem; background-color: #fff; cursor: pointer; }
+        .device-selector select:focus { border-color: var(--primary); outline: none; }
+
+        /* 下载表格 */
+        .table-container { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; min-width: 600px; }
+        th { text-align: left; padding: 12px; color: #64748b; font-weight: 600; border-bottom: 2px solid var(--border); font-size: 0.9rem; }
+        td { padding: 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+        .filename { font-family: monospace; color: #334155; font-weight: 600; }
+        .hash { font-family: monospace; font-size: 0.8rem; color: #94a3b8; max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: block; cursor: help; }
+        
+        /* 按钮 */
+        .btn { display: inline-block; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-weight: 500; font-size: 0.9rem; transition: all 0.2s; border: none; cursor: pointer; }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: #0284c7; }
+        .btn-copy { background: #f1f5f9; color: #475569; margin-left: 10px; font-size: 0.8rem; }
+        .btn-copy:hover { background: #e2e8f0; }
+
+        /* 代码块 */
+        /* 代码配置区 */
+        .config-area { background: #1e293b; color: #e2e8f0; padding: 20px; border-radius: 8px; overflow-x: auto; font-family: "JetBrains Mono", monospace; margin-top: 15px; position: relative; }
+        .copy-btn { position: absolute; top: 10px; right: 10px; background: rgba(255,255,255,0.1); border: none; color: white; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; }
+        .copy-btn:hover { background: rgba(255,255,255,0.2); }
+        #config-code {
+            display: block;          /* 让代码块变成块级元素，独占一行 */
+            white-space: pre;        /* 【关键】保留所有的空格和换行符，不自动合并 */
+            font-family: "JetBrains Mono", Consolas, monospace; /* 保持等宽字体 */
+            line-height: 1.5;        /* 增加行高，让代码更易读 */
+        }
+        
+        /* 加载与错误状态 */
+        #loading { text-align: center; padding: 50px; color: #64748b; }
+        .error-msg { background: #fee2e2; color: #991b1b; padding: 15px; border-radius: 8px; text-align: center; display: none; }
+        
+        /* 辅助类 */
+        .hidden { display: none; }
+        footer { margin-top: 40px; border-top: 1px solid var(--border); padding-top: 20px; text-align: center; color: #94a3b8; font-size: 0.85rem; }
+        .build-info { font-family: monospace; margin-bottom: 5px; }
+        .build-info a { color: inherit; text-decoration: none; border-bottom: 1px dashed #cbd5e1; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+<div class="header">
+    <div>
+        <a href="/" class="nav-link">← 返回首页</a>
+        <h1 style="margin-top: 10px;">固件镜像下载</h1>
+    </div>
+    
+    <div style="display: flex; align-items: center; gap: 15px;">
+        <div id="ver-display" class="version-badge hidden">Loading...</div>
+        
+        <a href="history.html" class="btn" style="background:white; border:1px solid var(--border); color:var(--text);">
+            🕘 历史版本
+        </a>
+    </div>
+</div>
+
+    <div id="error-box" class="error-msg"></div>
+
+    <div id="loading">
+        <svg style="width: 24px; height: 24px; animation: spin 1s linear infinite;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10" stroke-opacity="0.25"></circle>
+            <path d="M12 2a10 10 0 0 1 10 10" stroke-opacity="1"></path>
+        </svg>
+        <p>正在获取版本信息...</p>
+    </div>
+
+    <div id="main-content" class="hidden">
+        
+        <div class="card">
+            <div class="card-header">
+                <h2>📦 版本概况</h2>
+                <span id="build-target" style="color: #64748b; font-family: monospace;">-</span>
+            </div>
+            <div class="info-grid">
+                <div class="info-item">
+                    <label>构建版本</label>
+                    <span id="info-vercode">-</span>
+                </div>
+                <div class="info-item">
+                    <label>Linux 内核</label>
+                    <span id="info-kernel">-</span>
+                </div>
+                <div class="info-item">
+                    <label>Vermagic (Hash)</label>
+                    <span id="info-magic" title="内核签名">-</span>
+                </div>
+                <div class="info-item">
+                    <label>架构 (Arch)</label>
+                    <span id="info-arch">-</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h2>💾 镜像文件</h2>
+            </div>
+            
+            <div class="device-selector">
+                <select id="device-select" aria-label="选择设备型号">
+                    <option value="">加载设备列表中...</option>
+                </select>
+            </div>
+
+            <div class="table-container">
+                <table id="download-table">
+                    <thead>
+                        <tr>
+                            <th>文件类型</th>
+                            <th>文件名</th>
+                            <th>SHA256 校验码</th>
+                            <th style="text-align: right;">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="file-list-body">
+                        </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>🛠️ Opkg 软件源配置</h2>
+            <p>此配置已包含当前版本的内核模块源 (kmods)。请将其内容覆盖到路由器的 <strong>/etc/opkg/distfeeds.conf</strong> 文件中。</p>
+            
+            <div class="config-area">
+                <button class="copy-btn" onclick="copyConfig()">复制</button>
+                <code id="config-code">
+                    # 正在生成配置...
+                </code>
+            </div>
+        </div>
+    </div>
+     <footer>
+        <div id="version-info" class="build-info">
+            <span>Build: <a href="#" id="commit-link">Checking...</a></span>
+            <span style="margin: 0 8px;">•</span>
+            <span id="update-date">...</span>
+        </div>
+        &copy; 2026 Ethan | Powered by GitHub Pages
+    </footer>
+</div>
+
+
+<script>
+    // 配置：上级 Packages 目录相对于 images/VERSION/ 的位置
+    // 如果 images/v1.0/ 对应 packages/v1.0/，则无需修改
+    // 如果 packages 在根目录，则需要回退
+    const CONFIG = {
+        packagesBaseUrl: '../../packages' ,
+        githubUser: 'Ye-Ethan',
+        githubRepo: 'opwnwrt-opkg-source',
+    };
+
+    let currentData = null;
+    let currentVersion = '';
+
+    window.onload = async () => {
+        try {
+            await init();
+        } catch (e) {
+            showError("初始化失败: " + e.message);
+        }
+        try {
+            fetchGitHubInfo();
+        } catch {
+            //隐藏version-info
+            document.getElementById('version-info').style.display = 'none';
+        }
+    };
+
+    async function init() {
+        // 1. 解析 URL 参数
+        const params = new URLSearchParams(window.location.search);
+        let version = params.get('version');
+
+        // 2. 如果没有版本参数，请求 latest.json
+        if (!version) {
+            try {
+                const latestRes = await fetch('latest.json?t=' + Date.now());
+                if (!latestRes.ok) throw new Error("无法加载 latest.json");
+                const latestData = await latestRes.json();
+                version = latestData.latest_version;
+            } catch (e) {
+                // 如果 latest.json 不存在，尝试提示用户
+                throw new Error("无法获取最新版本信息，请检查 latest.json");
+            }
+        }
+
+        currentVersion = version;
+        
+        // 3. 更新 UI 状态
+        document.getElementById('ver-display').textContent = version;
+        document.getElementById('ver-display').classList.remove('hidden');
+
+        // 4. 加载特定版本的 profiles.json
+        // 路径假设：当前目录/版本号/profiles.json
+        const profileUrl = `${version}/profiles.json`;
+        
+        try {
+            const profileRes = await fetch(profileUrl);
+            if (!profileRes.ok) throw new Error(`找不到版本 ${version} 的元数据 (404)`);
+            currentData = await profileRes.json();
+            renderPage(currentData);
+        } catch (e) {
+            throw new Error(`加载版本数据失败: ${e.message}`);
+        }
+    }
+   
+    function copyConfig() {
+        console.log('copyConfig called',document.querySelector('#config-code'));
+        const text = document.querySelector('#config-code').textContent;
+        navigator.clipboard.writeText(text).then(() => alert('配置已复制！'));
+    }
+    function renderPage(data) {
+        document.getElementById('loading').classList.add('hidden');
+        document.getElementById('main-content').classList.remove('hidden');
+
+        // 1. 填充基础信息
+        document.getElementById('info-vercode').textContent = data.version_code || data.version_number;
+        document.getElementById('info-kernel').textContent = data.linux_kernel.version;
+        document.getElementById('info-magic').textContent = data.linux_kernel.vermagic.substring(0, 8) + '...';
+        document.getElementById('info-magic').title = data.linux_kernel.vermagic;
+        document.getElementById('info-arch').textContent = data.arch_packages;
+        document.getElementById('build-target').textContent = `Target: ${data.target}`;
+
+        // 2. 初始化设备下拉
+        const selector = document.getElementById('device-select');
+        selector.innerHTML = '';
+        const profiles = data.profiles;
+        
+        Object.keys(profiles).forEach((key, index) => {
+            const profile = profiles[key];
+            const title = profile.titles[0];
+            const option = document.createElement('option');
+            option.value = key;
+            option.textContent = `${title.vendor} ${title.model} ${title.variant || ''}`;
+            selector.appendChild(option);
+            
+            // 默认选中第一个
+            if (index === 0) renderFileList(key);
+        });
+
+        // 绑定切换事件
+        selector.onchange = (e) => renderFileList(e.target.value);
+
+        // 3. 生成 Opkg 配置
+        renderOpkgConfig(data);
+    }
+
+    function renderFileList(profileKey) {
+        const tbody = document.getElementById('file-list-body');
+        tbody.innerHTML = '';
+        
+        const images = currentData.profiles[profileKey].images;
+        // 基础下载路径：当前页面同级目录 + 版本号目录
+        const basePath = `${currentVersion}/`;
+
+        images.forEach(img => {
+            const tr = document.createElement('tr');
+            
+            // 简化类型显示
+            let typeLabel = img.type;
+            if (img.type.includes('sysupgrade')) typeLabel = 'Sysupgrade (升级包)';
+            else if (img.type.includes('factory')) typeLabel = 'Factory (过渡包)';
+            else if (img.type.includes('initramfs')) typeLabel = 'Initramfs (救砖)';
+
+            tr.innerHTML = `
+                <td><span style="font-weight:500; color:#475569">${typeLabel}</span></td>
+                <td><a href="${basePath}${img.name}" class="filename" download>${img.name}</a></td>
+                <td><span class="hash" title="${img.sha256}">${img.sha256}</span></td>
+                <td style="text-align: right;">
+                    <a href="${basePath}${img.name}" class="btn btn-primary">下载</a>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    function renderOpkgConfig(data) {
+        // 动态推导 URL
+        // 假设 structure:
+        // root/images/v1.0/index.html (current)
+        // root/packages/aarch64_cortex-a53/base/ (generic)
+        // root/packages/kmods/v1.0/ (kernel specific)
+
+        // 这里需要非常小心路径回退。
+        // 当前页面在 root/images/
+        // 我们需要指向 root/packages/
+        
+        const origin = window.location.origin;
+        // 如果页面部署在子目录，这里最好用相对路径推导绝对路径，或者直接假设相对路径
+        // 为了简便，我们生成基于 HTTP 的绝对路径
+        
+        // 寻找 path prefix (去掉 images/index.html)
+        const pathPrefix = window.location.pathname.replace(/\/images\/.*$/, '');
+        
+        // 构建通用包路径 (base, luci)
+        // 假设 packages 在根目录下的 packages/ARCH
+        const arch = data.arch_packages;
+        const genericBase = `${origin}${pathPrefix}/packages/${arch}`;
+        
+        // 构建内核包路径 (kmods)
+        // 假设 packages/kmods/VERSION
+        // 用户提到 images 和 packages 提供 json，这里我们假设目录结构是对应的
+        const kmodBase = `${origin}${pathPrefix}/packages/kmods/${currentVersion}`;
+
+        let conf = `# ImmortalWrt Feeds - ${currentVersion}\n`;
+        conf += `# Arch: ${arch} | Kernel: ${data.linux_kernel.version}\n\n`;
+        
+        conf += `src/gz custom_base ${genericBase}/base\n`;
+        conf += `src/gz custom_luci ${genericBase}/luci\n`;
+        conf += `src/gz custom_packages ${genericBase}/packages\n`;
+        conf += `src/gz custom_routing ${genericBase}/routing\n`;
+        conf += `src/gz custom_telephony ${genericBase}/telephony\n`;
+        conf += `\n# Kernel Modules (Hash 匹配)\n`;
+        conf += `src/gz custom_core ${kmodBase}\n`; // 这一层目录里应该有 Packages.gz
+
+        document.getElementById('config-code').textContent = conf;
+    }
+
+    function copyConfig() {
+        const text = document.getElementById('opkg-code').textContent;
+        navigator.clipboard.writeText(text).then(() => alert('配置已复制！'));
+    }
+
+    function showError(msg) {
+        const box = document.getElementById('error-box');
+        box.textContent = msg;
+        box.style.display = 'block';
+        document.getElementById('loading').classList.add('hidden');
+    }
+    function fetchGitHubInfo() {
+        fetch(`https://api.github.com/repos/${CONFIG.githubUser}/${CONFIG.githubRepo}/commits?per_page=1`)
+            .then(r => r.ok ? r.json() : null)
+            .then(data => {
+                if (!data || !data[0]) return;
+                const commit = data[0];
+                const date = new Date(commit.commit.committer.date).toLocaleString();
+                
+                document.getElementById('commit-link').textContent = commit.sha.substring(0, 7);
+                document.getElementById('commit-link').href = commit.html_url;
+                document.getElementById('update-date').textContent = date;
+            })
+            .catch(() => {});
+    }
+    
+    // 注入 CSS 动画
+    const style = document.createElement('style');
+    style.innerHTML = `
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+    `;
+    document.head.appendChild(style);
+</script>
+
+</body>
+</html>

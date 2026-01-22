@@ -3,109 +3,272 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OpenWrt 仓库 - Redmi AX6000</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📦</text></svg>">
+    <title>ImmortalWrt - Redmi AX6000 固件仓库</title>
+    <meta name="description" content="Redmi AX6000 OpenWrt/ImmortalWrt 固件与软件源镜像站">
     <style>
-        :root { --primary: #0066cc; --bg: #f8f9fa; --code-bg: #2d2d2d; }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: #333; margin: 0; padding: 20px; line-height: 1.6; }
-        .container { max-width: 800px; margin: 0 auto; background: #fff; padding: 40px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
-        h1 { border-bottom: 2px solid #eee; padding-bottom: 15px; display: flex; align-items: center; gap: 10px; margin-top: 0; }
-        .repo-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; margin: 30px 0; }
-        .repo-card { background: #fff; border: 1px solid #e1e4e8; padding: 20px; border-radius: 8px; text-align: center; text-decoration: none; color: var(--primary); font-weight: 600; transition: transform 0.2s, box-shadow 0.2s; }
-        .repo-card:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); border-color: var(--primary); }
-        
-        .code-block { background: var(--code-bg); color: #f8f8f2; padding: 20px; border-radius: 8px; overflow-x: auto; margin: 15px 0; font-family: 'SFMono-Regular', Consolas, monospace; font-size: 0.9rem; position: relative; }
-        .note { background: #e7f5ff; border-left: 4px solid var(--primary); padding: 15px; margin: 20px 0; border-radius: 0 4px 4px 0; }
-        
-        footer { text-align: center; margin-top: 40px; color: #666; font-size: 0.85rem; }
-    </style>
-    <script>
-    (function() {
-        // configuration
-        const GITHUB_USER = 'Ye-Ethan'; // 替换你的 GitHub 用户名
-        const GITHUB_REPO = 'opwnwrt-opkg-source';       // 替换你的仓库名 (例如 opkg-repo)
-        
-        // 格式化日期的函数 (YYYY-MM-DD HH:mm)
-        function formatDate(isoString) {
-            const date = new Date(isoString);
-            const pad = (n) => n.toString().padStart(2, '0');
-            return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
+        /* 核心变量 - 保持与子页面一致的设计语言 */
+        :root {
+            --primary: #2563eb;       /* 蓝色主色调 */
+            --primary-dark: #1e40af;
+            --secondary: #0f172a;     /* 深色背景 */
+            --accent: #38bdf8;        /* 亮色点缀 */
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --card-border: rgba(255, 255, 255, 0.1);
         }
 
-        // 获取最近一次 Commit 信息
-        fetch(`https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/commits?per_page=1`)
-            .then(response => {
-                if (!response.ok) throw new Error('Network response was not ok');
-                return response.json();
-            })
-            .then(data => {
-                // GitHub API 返回的是数组，取第一个即为最新 commit
-                const latest = data[0];
-                const sha = latest.sha.substring(0, 7); // 截取前7位 Hash
-                const date = latest.commit.committer.date; // 获取提交时间
-                
-                // 更新 DOM
-                const infoDiv = document.getElementById('version-info');
-                if (infoDiv) {
-                    infoDiv.innerHTML = `
-                        <span>Build: <a href="${latest.html_url}" target="_blank" style="color: inherit; text-decoration: none; border-bottom: 1px dashed #999;">${sha}</a></span>
-                        <span style="margin: 0 8px;">|</span>
-                        <span>Updated: ${formatDate(date)}</span>
-                    `;
-                }
-            })
-            .catch(error => {
-                console.error('无法获取版本信息:', error);
-                const infoDiv = document.getElementById('version-info');
-                if(infoDiv) infoDiv.style.display = 'none'; // 获取失败则隐藏
-            });
-    })();
-</script>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--secondary);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 顶部导航 */
+        .navbar {
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--card-border);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(15, 23, 42, 0.8);
+        }
+        .logo {
+            font-weight: 700;
+            font-size: 1.2rem;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .logo span { color: var(--accent); }
+        .github-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+        .github-link:hover { color: white; }
+
+        /* Hero 区域 (主视觉) */
+        .hero {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 60px 20px;
+            background: radial-gradient(circle at top center, rgba(37, 99, 235, 0.15) 0%, transparent 70%);
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            margin: 0 0 20px 0;
+            line-height: 1.1;
+            background: linear-gradient(to right, #fff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .subtitle {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto 40px auto;
+        }
+
+        /* 版本徽章 */
+        .version-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(56, 189, 248, 0.1);
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            padding: 6px 16px;
+            border-radius: 99px;
+            color: var(--accent);
+            font-family: monospace;
+            font-size: 0.9rem;
+            margin-bottom: 25px;
+            opacity: 0;
+            animation: fadeIn 0.5s forwards;
+        }
+        .dot { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; box-shadow: 0 0 10px var(--accent); }
+
+        /* 卡片网格 */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            max-width: 1000px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 30px;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(56, 189, 248, 0.3);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .card h2 { margin: 0 0 10px 0; font-size: 1.5rem; }
+        .card p { color: var(--text-muted); margin: 0; font-size: 0.95rem; }
+        .card-icon { font-size: 2rem; margin-bottom: 15px; display: block; }
+        .arrow { position: absolute; bottom: 25px; right: 25px; opacity: 0; transition: all 0.3s; transform: translateX(-10px); }
+        .card:hover .arrow { opacity: 1; transform: translateX(0); color: var(--accent); }
+
+        /* 页脚 */
+        footer {
+            text-align: center;
+            padding: 40px;
+            color: rgba(255, 255, 255, 0.2);
+            font-size: 0.85rem;
+        }
+
+        /* 动画 */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* 移动端适配 */
+        @media (max-width: 600px) {
+            h1 { font-size: 2.5rem; }
+            .navbar { padding: 15px 20px; }
+        }
+    </style>
 </head>
 <body>
 
-<div class="container">
-    <h1><span>📦</span> OpenWrt 24.10 仓库</h1>
-    <p>适用于 <strong>Redmi AX6000</strong> (aarch64_cortex-a53)</p>
+    <nav class="navbar">
+        <div class="logo">🚀 ImmortalWrt <span>Repo</span></div>
+        <a href="https://github.com/Ye-Ethan" class="github-link" target="_blank">GitHub ↗</a>
+    </nav>
 
-    <div class="repo-grid">
-        <a href="view.html?repo=base" class="repo-card">Base</a>
-        <a href="view.html?repo=luci" class="repo-card">LuCI</a>
-        <a href="view.html?repo=packages" class="repo-card">Packages</a>
-        <!-- <a href="view.html?repo=routing" class="repo-card">Routing</a>
-        <a href="view.html?repo=telephony" class="repo-card">Telephony</a> -->
-        <a href="view.html?repo=nikki" class="repo-card">Nikki(luci_Mihomo)</a>
-    </div>
+    <div class="hero">
+        <div id="latest-badge" class="version-pill">
+            <span class="dot"></span>
+            <span id="ver-text">Loading...</span>
+        </div>
 
-    <h2>🛠️ 快速配置</h2>
-    <div class="note">
-        注意：请确保你的固件架构为 <code>aarch64_cortex-a53</code> 且基于 OpenWrt 24.10 构建。
-    </div>
+        <h1>Redmi AX6000<br>极致固件体验</h1>
+        <p class="subtitle">
+            为 Redmi AX6000 提供<br>
+            最新、简约的 ImmortalWrt 固件下载与插件软件源镜像服务
+        </p>
 
-    <p>SSH 连接到路由器，执行以下命令一键替换源：</p>
-    
-    <div class="code-block">
-cp /etc/opkg/distfeeds.conf /etc/opkg/distfeeds.conf.bak<br>
-<br>
-cat &gt; /etc/opkg/distfeeds.conf &lt;&lt;EOF<br>
-src/gz yaojiu_base https://opkg.yaojiu.org/base<br>
-src/gz yaojiu_luci https://opkg.yaojiu.org/luci<br>
-src/gz yaojiu_packages https://opkg.yaojiu.org/packages<br>
-src/gz yaojiu_packages https://opkg.yaojiu.org/nikki<br>
-<!-- src/gz yaojiu_routing https://opkg.yaojiu.org/routing<br>
-src/gz yaojiu_telephony https://opkg.yaojiu.org/telephony<br> -->
-EOF<br>
-<br>
-opkg update
+        <div class="grid">
+            <a href="images/index.html" class="card">
+                <span class="card-icon">💾</span>
+                <h2>固件下载</h2>
+                <p>获取最新的 Sysupgrade 升级包、Factory 过渡包及救砖镜像。</p>
+                <div class="arrow">→</div>
+            </a>
+
+            <a href="packages/index.html" class="card">
+                <span class="card-icon">📦</span>
+                <h2>软件仓库</h2>
+                <p>浏览数千个预编译插件。自动配置 Opkg 源，完美解决内核依赖。</p>
+                <div class="arrow">→</div>
+            </a>
+        </div>
     </div>
 
     <footer>
-    <div id="version-info" style="margin-bottom: 10px; font-family: monospace; font-size: 0.8em; color: #888;">
-        <span>Ver: loading...</span> | <span>Date: loading...</span>
-    </div>
-    &copy; 2026 Yaojiu.org | Powered by GitHub Pages
-</footer>
-</div>
+        <div id="version-info" class="build-info" style="margin-top: 10px;">
+            <span>Build: <a href="#" id="commit-link">Checking...</a></span>
+            <span style="margin: 0 8px;">•</span>
+            <span id="update-date">...</span>
+        </div>
+        &copy; 2026 Ethan | Powered by GitHub Pages
+    </footer>
 
+    <script>
+        // 自动获取最新版本信息
+        const CONFIG = {
+            githubUser: 'Ye-Ethan',
+            githubRepo: 'opwnwrt-opkg-source', // 替换为真实仓库名
+        };
+        window.onload = async () => {
+            try {
+                // 读取 images/latest.json
+                const res = await fetch('images/latest.json?t=' + Date.now());
+                if (!res.ok) throw new Error("Network error");
+                
+                const data = await res.json();
+                
+                // 更新 Badge
+                const verText = document.getElementById('ver-text');
+                const timeAgo = getTimeAgo(data.updated_at || new Date()); // 如果 json 里是 date 字段
+                
+                verText.textContent = `${data.latest_version} (${timeAgo})`;
+                fetchGitHubInfo();
+                
+                // 可选：如果需要在某处显示公告，也可以 data.announcement
+                
+            } catch (e) {
+                document.getElementById('ver-text').textContent = "Server Offline";
+                document.querySelector('.dot').style.backgroundColor = '#ef4444'; // Red color
+                document.querySelector('.dot').style.boxShadow = 'none';
+            }
+        };
+
+        // 简单的“多久以前”计算函数
+        function getTimeAgo(dateString) {
+            const date = new Date(dateString);
+            const now = new Date();
+            const seconds = Math.floor((now - date) / 1000);
+            const intervals = {
+                '年': 31536000,
+                '个月': 2592000,
+                '天': 86400,
+                '小时': 3600,
+                '分钟': 60
+            };
+
+            for (let [unit, secondsInUnit] of Object.entries(intervals)) {
+                const interval = Math.floor(seconds / secondsInUnit);
+                if (interval >= 1) {
+                    return interval + " " + unit + "前更新";
+                }
+            }
+            return "刚刚更新";
+        }
+        function fetchGitHubInfo() {
+        fetch(`https://api.github.com/repos/${CONFIG.githubUser}/${CONFIG.githubRepo}/commits?per_page=1`)
+            .then(r => r.ok ? r.json() : null)
+            .then(data => {
+                if (!data || !data[0]) return;
+                const commit = data[0];
+                const date = new Date(commit.commit.committer.date).toLocaleString();
+                
+                document.getElementById('commit-link').textContent = commit.sha.substring(0, 7);
+                document.getElementById('commit-link').href = commit.html_url;
+                document.getElementById('update-date').textContent = date;
+            })
+            .catch(() => {});
+    }
+    </script>
 </body>
 </html>
