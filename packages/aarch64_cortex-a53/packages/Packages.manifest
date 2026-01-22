@@ -199,6 +199,24 @@ Size: 260449
 SHA256sum: dde1fa9101d09886a21acdb97ccfc452b56c8c572ea4423f3191fcd7ec56aad6
 Description:  A client-side URL transfer library
 
+Package: liblzma
+Version: 5.6.2-r2
+Depends: libc, libpthread
+Source: feeds/packages/utils/xz
+SourceName: xz
+License: Public-Domain LGPL-2.1-or-later 0BSD
+LicenseFiles: COPYING
+Section: libs
+SourceDateEpoch: 1768968586
+URL: https://tukaani.org/xz
+CPE-ID: cpe:/a:tukaani:xz
+Architecture: aarch64_cortex-a53
+Installed-Size: 143360
+Filename: liblzma_5.6.2-r2_aarch64_cortex-a53.ipk
+Size: 65759
+SHA256sum: 18cd82707df596bb1ee5bb4348facd74773170137ca7516c85532d8845e4c863
+Description:  liblzma library from XZ Utils
+
 Package: libnghttp2-14
 Version: 1.63.0-r1
 Depends: libc
@@ -337,6 +355,119 @@ Filename: xz-utils_5.6.2-r2_aarch64_cortex-a53.ipk
 Size: 859
 SHA256sum: 5963d64bf2d5ff6339a4a8b75ad80acfb223fcc6cbe96fea58033012a8aa2df7
 Description:  XZ Utils (meta)
+
+Package: xz
+Version: 5.6.2-r2
+Depends: libc, xz-utils, liblzma
+Alternatives: 300:/usr/bin/xz:/usr/libexec/xz-lzmautils, 300:/usr/bin/lzcat:/usr/libexec/xz-lzmautils, 300:/usr/bin/lzma:/usr/libexec/xz-lzmautils, 300:/usr/bin/unlzma:/usr/libexec/xz-lzmautils, 300:/usr/bin/unxz:/usr/libexec/xz-lzmautils, 300:/usr/bin/xzcat:/usr/libexec/xz-lzmautils
+Source: feeds/packages/utils/xz
+SourceName: xz
+License: Public-Domain LGPL-2.1-or-later 0BSD
+LicenseFiles: COPYING
+Section: utils
+SourceDateEpoch: 1768968586
+URL: https://tukaani.org/xz
+CPE-ID: cpe:/a:tukaani:xz
+Architecture: aarch64_cortex-a53
+Installed-Size: 71680
+Filename: xz_5.6.2-r2_aarch64_cortex-a53.ipk
+Size: 30783
+SHA256sum: 105db566b6434a52a66aeafa47eb0bb0b6be2da8faf4b6a5449e41a3114f3feb
+Description:  Contains: xz  lzcat lzma unlzma unxz xzcat
+
+Package: xzdec
+Version: 5.6.2-r2
+Depends: libc, xz-utils, liblzma
+Source: feeds/packages/utils/xz
+SourceName: xz
+License: Public-Domain LGPL-2.1-or-later 0BSD
+LicenseFiles: COPYING
+Section: utils
+SourceDateEpoch: 1768968586
+URL: https://tukaani.org/xz
+CPE-ID: cpe:/a:tukaani:xz
+Architecture: aarch64_cortex-a53
+Installed-Size: 71680
+Filename: xzdec_5.6.2-r2_aarch64_cortex-a53.ipk
+Size: 4585
+SHA256sum: 45082bcdc74c6c971cfca48f3170e51e9f47f2535ad4e24a226d8ad9d57f8fc2
+Description:  Contains: xzdec 
+
+Package: xzdiff
+Version: 5.6.2-r2
+Depends: libc, xz-utils, xz
+Alternatives: 300:/usr/bin/xzdiff:/usr/libexec/xzdiff-lzmautils, 300:/usr/bin/lzcmp:/usr/libexec/xzdiff-lzmautils, 300:/usr/bin/lzdiff:/usr/libexec/xzdiff-lzmautils, 300:/usr/bin/xzcmp:/usr/libexec/xzdiff-lzmautils
+Source: feeds/packages/utils/xz
+SourceName: xz
+License: Public-Domain LGPL-2.1-or-later 0BSD
+LicenseFiles: COPYING
+Section: utils
+SourceDateEpoch: 1768968586
+URL: https://tukaani.org/xz
+CPE-ID: cpe:/a:tukaani:xz
+Architecture: aarch64_cortex-a53
+Installed-Size: 20480
+Filename: xzdiff_5.6.2-r2_aarch64_cortex-a53.ipk
+Size: 3805
+SHA256sum: 7cd1cfc1266668c591b5b0b79a2b2d908fe3dd382463f731f56d1b13b1c6f83b
+Description:  Contains: xzdiff  lzcmp lzdiff xzcmp
+
+Package: xzgrep
+Version: 5.6.2-r2
+Depends: libc, xz-utils, xz
+Alternatives: 300:/usr/bin/xzgrep:/usr/libexec/xzgrep-lzmautils, 300:/usr/bin/lzegrep:/usr/libexec/xzgrep-lzmautils, 300:/usr/bin/lzfgrep:/usr/libexec/xzgrep-lzmautils, 300:/usr/bin/lzgrep:/usr/libexec/xzgrep-lzmautils, 300:/usr/bin/xzegrep:/usr/libexec/xzgrep-lzmautils, 300:/usr/bin/xzfgrep:/usr/libexec/xzgrep-lzmautils
+Source: feeds/packages/utils/xz
+SourceName: xz
+License: Public-Domain LGPL-2.1-or-later 0BSD
+LicenseFiles: COPYING
+Section: utils
+SourceDateEpoch: 1768968586
+URL: https://tukaani.org/xz
+CPE-ID: cpe:/a:tukaani:xz
+Architecture: aarch64_cortex-a53
+Installed-Size: 20480
+Filename: xzgrep_5.6.2-r2_aarch64_cortex-a53.ipk
+Size: 5337
+SHA256sum: c564b1e5a1ad1d4d25b2ad5934ee814525350c00fbac1c9516fcb5508e3abf83
+Description:  Contains: xzgrep  lzegrep lzfgrep lzgrep xzegrep xzfgrep
+
+Package: xzless
+Version: 5.6.2-r2
+Depends: libc, xz-utils, xz
+Alternatives: 300:/usr/bin/xzless:/usr/libexec/xzless-lzmautils, 300:/usr/bin/lzless:/usr/libexec/xzless-lzmautils
+Source: feeds/packages/utils/xz
+SourceName: xz
+License: Public-Domain LGPL-2.1-or-later 0BSD
+LicenseFiles: COPYING
+Section: utils
+SourceDateEpoch: 1768968586
+URL: https://tukaani.org/xz
+CPE-ID: cpe:/a:tukaani:xz
+Architecture: aarch64_cortex-a53
+Installed-Size: 10240
+Filename: xzless_5.6.2-r2_aarch64_cortex-a53.ipk
+Size: 2318
+SHA256sum: 7fe995880cd19c55f8d1c356826f766eae34ea6821f198a1df9bc29e50823b7c
+Description:  Contains: xzless  lzless
+
+Package: xzmore
+Version: 5.6.2-r2
+Depends: libc, xz-utils, xz
+Alternatives: 300:/usr/bin/xzmore:/usr/libexec/xzmore-lzmautils, 300:/usr/bin/lzmore:/usr/libexec/xzmore-lzmautils
+Source: feeds/packages/utils/xz
+SourceName: xz
+License: Public-Domain LGPL-2.1-or-later 0BSD
+LicenseFiles: COPYING
+Section: utils
+SourceDateEpoch: 1768968586
+URL: https://tukaani.org/xz
+CPE-ID: cpe:/a:tukaani:xz
+Architecture: aarch64_cortex-a53
+Installed-Size: 10240
+Filename: xzmore_5.6.2-r2_aarch64_cortex-a53.ipk
+Size: 2190
+SHA256sum: 4bcea3fc6f2abd06f0077b2c1c3bc66a59338e69dcda609a02d099733b65ba4f
+Description:  Contains: xzmore  lzmore
 
 Package: yq
 Version: 4.45.1-r1

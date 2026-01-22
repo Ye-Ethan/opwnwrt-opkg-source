@@ -18,7 +18,7 @@
       "name": "packages",
       "path": "packages",
       "description": "社区维护的通用应用软件 (adblock-fast,btop 等)",
-      "package_count": 17
+      "package_count": 24
     },
     {
       "name": "routing",
