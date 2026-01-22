@@ -1,0 +1,22 @@
+{
+  "version": 2,
+  "architecture": "aarch64_cortex-a53",
+  "packages": {
+    "adblock-fast": "1.2.0-r26",
+    "attendedsysupgrade-common": "9",
+    "btop": "1.4.5-r1",
+    "cgi-io": "2022.08.10~901b0f04-r21",
+    "curl": "8.12.1-r1",
+    "ddns-go": "6.11.2-r1",
+    "htop": "3.4.1-r1",
+    "libcap-ng": "0.8.4-r1",
+    "libcurl": "8.12.1-r1",
+    "libnghttp2": "1.63.0-r1",
+    "libuv": "1.48.0-r1",
+    "libwebsockets-full": "4.3.3-r1",
+    "miniupnpd-nftables": "2.3.9-r1",
+    "ttyd": "1.7.3-r1",
+    "vlmcsd": "2020.03.30~e5990804-r8",
+    "yq": "4.45.1-r1"
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "arch": "aarch64_cortex-a53",
+  "updated_at": "2026-01-22",
+  "feeds": [
+    {
+      "name": "base",
+      "path": "base",
+      "description": "OpenWrt 系统基础包 (libc, opkg, firewall4 等)",
+      "package_count": 92
+    },
+    {
+      "name": "luci",
+      "path": "luci",
+      "description": "LuCI Web 界面组件、应用和主题",
+      "package_count": 52
+    },
+    {
+      "name": "packages",
+      "path": "packages",
+      "description": "社区维护的通用应用软件 (adblock-fast,btop 等)",
+      "package_count": 16
+    },
+    {
+      "name": "routing",
+      "path": "routing",
+      "description": "路由和网络相关的软件包 (Babel, B.A.T.M.A.N., OLSR 等)",
+      "package_count": 0
+    },
+    {
+      "name": "telephony",
+      "path": "telephony",
+      "description": "语音通信相关的软件包 (Asterisk, FreeSWITCH 等)",
+      "package_count": 0
+    },
+    {
+      "name": "nikki",
+      "path": "nikki",
+      "description": "Nikki(openwrt-mihomo代理) 相关软件包",
+      "package_count": 3
+    }
+  ]
+}
