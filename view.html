@@ -44,7 +44,56 @@
     <div id="content">
         <div class="loading">正在获取索引文件...</div>
     </div>
+    <footer>
+    <div id="version-info" style="margin-bottom: 10px; font-family: monospace; font-size: 0.8em; color: #888;">
+        <span>Ver: loading...</span> | <span>Date: loading...</span>
+    </div>
+    &copy; 2026 Yaojiu.org | Powered by GitHub Pages
+</footer>
 </div>
+
+<script>
+    (function() {
+        // configuration
+        const GITHUB_USER = 'Ye-Ethan'; // 替换你的 GitHub 用户名
+        const GITHUB_REPO = 'opwnwrt-opkg-source';       // 替换你的仓库名 (例如 opkg-repo)
+        
+        // 格式化日期的函数 (YYYY-MM-DD HH:mm)
+        function formatDate(isoString) {
+            const date = new Date(isoString);
+            const pad = (n) => n.toString().padStart(2, '0');
+            return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
+        }
+
+        // 获取最近一次 Commit 信息
+        fetch(`https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/commits?per_page=1`)
+            .then(response => {
+                if (!response.ok) throw new Error('Network response was not ok');
+                return response.json();
+            })
+            .then(data => {
+                // GitHub API 返回的是数组，取第一个即为最新 commit
+                const latest = data[0];
+                const sha = latest.sha.substring(0, 7); // 截取前7位 Hash
+                const date = latest.commit.committer.date; // 获取提交时间
+                
+                // 更新 DOM
+                const infoDiv = document.getElementById('version-info');
+                if (infoDiv) {
+                    infoDiv.innerHTML = `
+                        <span>Build: <a href="${latest.html_url}" target="_blank" style="color: inherit; text-decoration: none; border-bottom: 1px dashed #999;">${sha}</a></span>
+                        <span style="margin: 0 8px;">|</span>
+                        <span>Updated: ${formatDate(date)}</span>
+                    `;
+                }
+            })
+            .catch(error => {
+                console.error('无法获取版本信息:', error);
+                const infoDiv = document.getElementById('version-info');
+                if(infoDiv) infoDiv.style.display = 'none'; // 获取失败则隐藏
+            });
+    })();
+</script>
 
 <script>
     // 1. 获取 URL 参数中的 repo 名称 (例如 base, luci)
