@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenWrt 24.10 软件仓库 - Redmi AX6000</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f6f9;
+        }
+        .container {
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        h1 { color: #0056b3; border-bottom: 2px solid #e9ecef; padding-bottom: 10px; }
+        h2 { margin-top: 30px; font-size: 1.2rem; color: #495057; }
+        
+        .repo-list {
+            list-style: none;
+            padding: 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+        }
+        .repo-list li a {
+            display: block;
+            padding: 15px;
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            text-align: center;
+            text-decoration: none;
+            color: #0056b3;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+        .repo-list li a:hover {
+            background: #e9ecef;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .config-box {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-family: Consolas, Monaco, "Andale Mono", monospace;
+            font-size: 0.9em;
+            position: relative;
+        }
+        .note {
+            background-color: #e2f0fb;
+            border-left: 4px solid #0056b3;
+            padding: 10px 15px;
+            margin: 20px 0;
+            font-size: 0.9rem;
+        }
+        footer {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 0.8rem;
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>OpenWrt 24.10 私有仓库</h1>
+    <p>适用于 <strong>Redmi AX6000</strong> (MediaTek Filogic 830) <br> 架构: <code>aarch64_cortex-a53</code></p>
+
+    <h2>浏览仓库目录</h2>
+    <ul class="repo-list">
+        <li><a href="base/">Base</a></li>
+        <li><a href="luci/">LuCI</a></li>
+        <li><a href="packages/">Packages</a></li>
+        <li><a href="routing/">Routing</a></li>
+        <li><a href="telephony/">Telephony</a></li>
+    </ul>
+
+    <h2>如何在路由器上使用</h2>
+    <div class="note">
+        <strong>提示：</strong> 请确保路由器的 OpenWrt 版本与本仓库 (24.10) 兼容，且架构一致。
+    </div>
+
+    <p>编辑路由器上的 <code>/etc/opkg/distfeeds.conf</code> 文件，添加或替换为以下内容：</p>
+    
+    <div class="config-box">
+src/gz yaojiu_base http://opkg.yaojiu.org/base
+src/gz yaojiu_luci http://opkg.yaojiu.org/luci
+src/gz yaojiu_packages http://opkg.yaojiu.org/packages
+src/gz yaojiu_routing http://opkg.yaojiu.org/routing
+src/gz yaojiu_telephony http://opkg.yaojiu.org/telephony
+    </div>
+
+    <p><strong>或者，直接在 SSH 执行以下命令（这将注释掉官方源并添加本源）：</strong></p>
+    <div class="config-box">
+# 备份原配置
+cp /etc/opkg/distfeeds.conf /etc/opkg/distfeeds.conf.bak
+
+# 写入新配置
+cat > /etc/opkg/distfeeds.conf <<EOF
+src/gz yaojiu_base http://opkg.yaojiu.org/base
+src/gz yaojiu_luci http://opkg.yaojiu.org/luci
+src/gz yaojiu_packages http://opkg.yaojiu.org/packages
+src/gz yaojiu_routing http://opkg.yaojiu.org/routing
+src/gz yaojiu_telephony http://opkg.yaojiu.org/telephony
+EOF
+
+# 更新
+opkg update
+    </div>
+
+    <div class="note">
+        <strong>关于签名验证：</strong> 此为自建仓库，未配置 usign 签名，更新时可能会报错。
+        <br>临时解决方法：编辑 <code>/etc/opkg.conf</code> 注释掉 <code>option check_signature</code>，或在安装时使用 <code>--force-checksum</code>。
+    </div>
+
+    <footer>
+        &copy; 2026 Yaojiu.org | OpenWrt Repository
+    </footer>
+</div>
+
+</body>
+</html>
