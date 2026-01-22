@@ -247,6 +247,20 @@ SHA256sum: b615c31242a760dcff69db0cb2234dce5f6afba9f7538e80ca5fe14a0cad9c1c
 Description:  KMS Emulator in C (currently runs on Linux including Android, FreeBSD,
  Solaris, Minix, Mac OS, iOS, Windows with or without Cygwin)
 
+Package: xz-utils
+Version: 5.6.2-r2
+Depends: libc
+License: Public-Domain LGPL-2.1-or-later 0BSD
+Section: utils
+URL: https://tukaani.org/xz
+CPE-ID: cpe:/a:tukaani:xz
+Architecture: aarch64_cortex-a53
+Installed-Size: 10240
+Filename: xz-utils_5.6.2-r2_aarch64_cortex-a53.ipk
+Size: 859
+SHA256sum: 5963d64bf2d5ff6339a4a8b75ad80acfb223fcc6cbe96fea58033012a8aa2df7
+Description:  XZ Utils (meta)
+
 Package: yq
 Version: 4.45.1-r1
 Depends: libc
