@@ -247,3 +247,16 @@ SHA256sum: b615c31242a760dcff69db0cb2234dce5f6afba9f7538e80ca5fe14a0cad9c1c
 Description:  KMS Emulator in C (currently runs on Linux including Android, FreeBSD,
  Solaris, Minix, Mac OS, iOS, Windows with or without Cygwin)
 
+Package: yq
+Version: 4.45.1-r1
+Depends: libc
+License: MIT
+Section: utils
+URL: https://mikefarah.gitbook.io/yq/
+Architecture: aarch64_cortex-a53
+Installed-Size: 9984000
+Filename: yq_4.45.1-r1_aarch64_cortex-a53.ipk
+Size: 3859544
+SHA256sum: 0b14c5689eea038507287a60e433d114510e9bcf020a1e9db5698c33cd1b07c7
+Description:  The aim of the project is to be the jq or sed of yaml files.
+

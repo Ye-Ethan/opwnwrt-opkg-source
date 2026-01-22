@@ -133,6 +133,22 @@ Size: 2711
 SHA256sum: 6799bc61c22fd44f5d0e7a1096d31f649906ce13c1487eadc3cd8c12192b39be
 Description:  hostapd/wpa_supplicant common support files
 
+Package: ip-full
+Version: 6.11.0-r1
+Depends: libc, libnl-tiny1, libbpf1
+Provides: ip
+Alternatives: 300:/sbin/ip:/usr/libexec/ip-full
+License: GPL-2.0
+Section: net
+URL: http://www.linuxfoundation.org/collaborate/workgroups/networking/iproute2
+CPE-ID: cpe:/a:iproute2_project:iproute2
+Architecture: aarch64_cortex-a53
+Installed-Size: 552960
+Filename: ip-full_6.11.0-r1_aarch64_cortex-a53.ipk
+Size: 236859
+SHA256sum: 37ce065bec551abffd5fecf9c803889616dbac2123013a9de6ce69c0119ac4d2
+Description:  Routing control utility (full)
+
 Package: iw
 Version: 6.9-r1
 Depends: libc, libnl-tiny1
@@ -703,6 +719,18 @@ Description:  Lua is a powerful light-weight programming language designed for e
  language. Lua is free software.
  This package contains the Lua language interpreter.
 
+Package: luci-app-adguardhome
+Version: 1.1.1-r1
+Depends: libc, ca-certs, curl, luci-lua-runtime
+Section: luci
+URL: https://github.com/openwrt/luci
+Architecture: all
+Installed-Size: 327680
+Filename: luci-app-adguardhome_1.1.1-r1_all.ipk
+Size: 92824
+SHA256sum: 4dfe0634122d5679923fef4e99bf6172af74f9bbf5f71affd80d566e3454caae
+Description:  LuCI support for AdGuardHome
+
 Package: luci-app-turboacc
 Version: 1.4-r1
 Depends: libc, luci, luci-compat, kmod-tcp-bbr, kmod-nft-offload, kmod-nft-fullcone, luci-lua-runtime
@@ -715,6 +743,17 @@ Filename: luci-app-turboacc_1.4-r1_all.ipk
 Size: 4642
 SHA256sum: 237e637f1917aea8d5d9cd3fdb90700631b47d7b13fd8715dc7a3bf60cc51370
 Description:  LuCI support for Flow Offload / Shortcut-FE
+
+Package: luci-i18n-adguradhome-zh-cn
+Version: 0
+Depends: libc, luci-app-adguardhome
+Section: luci
+Architecture: all
+Installed-Size: 20480
+Filename: luci-i18n-adguradhome-zh-cn_0_all.ipk
+Size: 3438
+SHA256sum: c55040ced1eb5436b93ebd84004508b813e86bf084b7ee1562d775ac28709cad
+Description:  Translation for luci-app-adguardhome - 简体中文 (Simplified Chinese)
 
 Package: luci-i18n-turboacc-zh-cn
 Version: 0

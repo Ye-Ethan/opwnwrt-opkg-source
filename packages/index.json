@@ -16,6 +16,7 @@
     "libwebsockets-full": "4.3.3-r1",
     "miniupnpd-nftables": "2.3.9-r1",
     "ttyd": "1.7.3-r1",
-    "vlmcsd": "2020.03.30~e5990804-r8"
+    "vlmcsd": "2020.03.30~e5990804-r8",
+    "yq": "4.45.1-r1"
   }
 }
