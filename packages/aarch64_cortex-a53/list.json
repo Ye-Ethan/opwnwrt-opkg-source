@@ -1,24 +1,24 @@
 {
   "arch": "aarch64_cortex-a53",
-  "updated_at": "2026-01-22",
+  "updated_at": "2026-01-24",
   "feeds": [
     {
       "name": "base",
       "path": "base",
       "description": "OpenWrt 系统基础包 (libc, opkg, firewall4 等)",
-      "package_count": 92
+      "package_count": 105
     },
     {
       "name": "luci",
       "path": "luci",
       "description": "LuCI Web 界面组件、应用和主题",
-      "package_count": 52
+      "package_count": 101
     },
     {
       "name": "packages",
       "path": "packages",
       "description": "社区维护的通用应用软件 (adblock-fast,btop 等)",
-      "package_count": 24
+      "package_count": 117
     },
     {
       "name": "routing",

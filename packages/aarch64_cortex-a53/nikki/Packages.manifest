@@ -43,7 +43,7 @@ Maintainer: Joseph Mory <morytyann@gmail.com>
 Architecture: aarch64_cortex-a53
 Installed-Size: 32890880
 Filename: nikki_2026.01.16-r1_aarch64_cortex-a53.ipk
-Size: 11674615
-SHA256sum: 8432bac167ee79dd314d3a9815ccd81dfebabbb847194137db2284694d499e0e
+Size: 11674721
+SHA256sum: 88133115b15abf3ccca3210462dac8fe0d7226fde2a5be568756f802c0931c7f
 Description:  A rule based proxy in Go.
 

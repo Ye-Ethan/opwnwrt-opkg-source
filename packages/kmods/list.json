@@ -2,6 +2,13 @@
   "versions": [
     {
       "kernel": "6.6.121",
+      "hash": "a67cdae5a17bcc26d0733b463920858c",
+      "path": "v24.10.4-1-stable",
+      "date": "2026-01-24",
+      "description": "对应固件 v24.10.4-1-stable"
+    },
+    {
+      "kernel": "6.6.121",
       "hash": "280a0fbab61db5479fcef3cc180b190d",
       "path": "v24.10-SNAPSHOT.r33791",
       "date": "2026-01-22",

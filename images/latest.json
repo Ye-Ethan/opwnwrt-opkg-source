@@ -1,9 +1,9 @@
 {
-  "latest_version": "v24.10-SNAPSHOT.r33791",
-  "updated_at": "2026-01-22 19:51:11",
-  "announcement": "首次发布基于最新24.10快照版本,支持tubroacc加速,ddns-go,upnp,网页终端,定时重启,文件管理等基础功能,提供部分kmod下载",
+  "latest_version": "v24.10.4-1-stable",
+  "updated_at": "2026-01-24 04:05:47",
+  "announcement": "使用openwrt-24.10.4构建，增加更多内核模块支持",
   "paths": {
-    "images": "images/v24.10-SNAPSHOT.r33791",
-    "kmods": "packages/kmods/v24.10-SNAPSHOT.r33791"
+    "images": "images/v24.10.4-1-stable",
+    "kmods": "packages/kmods/v24.10.4-1-stable"
   }
 }

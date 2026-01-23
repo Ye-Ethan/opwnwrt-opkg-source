@@ -37,6 +37,26 @@ SHA256sum: 53c3a806a45be811f14ff129f097ee25c9149e86d28a0230daf24e9732f1391a
 Description:  The Swiss Army Knife of embedded Linux.
  It slices, it dices, it makes Julian Fries.
 
+Package: bzip2
+Version: 1.0.8-r1
+Depends: libc, libbz2-1.0
+Source: feeds/base/utils/bzip2
+SourceName: bzip2
+License: bzip2-1.0.8
+LicenseFiles: LICENSE
+Section: utils
+SourceDateEpoch: 1753272501
+URL: https://sourceware.org/bzip2/
+CPE-ID: cpe:/a:bzip:bzip2
+Maintainer: Steven Barth <cyrus@openwrt.org>
+Architecture: aarch64_cortex-a53
+Installed-Size: 71680
+Filename: bzip2_1.0.8-r1_aarch64_cortex-a53.ipk
+Size: 13096
+SHA256sum: c1454f940319d56f085f5317fe913002c637d4aa9b0a84c36a830d5bfa6ff789
+Description:  bzip2 is a freely available, patent free, high-quality
+ data compressor. This package provides the binary.
+
 Package: ca-bundle
 Version: 20250419-r1
 Depends: libc
@@ -281,6 +301,29 @@ Size: 11137
 SHA256sum: f8e7b6da233e0bed6e7c7908cea20d400c32eda7857c26c66e07727fad42e7d6
 Description:  OpenWrt JSON filter utility
 
+Package: libblkid1
+Version: 2.40.2-r1
+Depends: libc, libuuid1
+Provides: libblkid
+Source: feeds/base/utils/util-linux
+SourceName: util-linux
+License: GPL-2.0-only
+LicenseFiles: COPYING libblkid/COPYING libmount/COPYING Documentation/licenses/COPYING.GPLv2 Documentation/licenses/COPYING.LGPLv2.1 libuuid/COPYING Documentation/licenses/COPYING.BSD-3
+Section: libs
+SourceDateEpoch: 1722099582
+URL: http://www.kernel.org/pub/linux/utils/util-linux/
+ABIVersion: 1
+CPE-ID: cpe:/a:kernel:util-linux
+Architecture: aarch64_cortex-a53
+Installed-Size: 337920
+Filename: libblkid1_2.40.2-r1_aarch64_cortex-a53.ipk
+Size: 117662
+SHA256sum: 568b6042b7604a29bc77317755e7824bcdea2612f6ffd0fa29b50023dcda4650
+Description:  The libblkid library is used to identify block devices (disks) as to their
+ content (e.g. filesystem type, partitions) as well as extracting additional
+ information such as filesystem labels/volume names, partitions, unique
+ identifiers/serial numbers...
+
 Package: libblobmsg-json20240329
 Version: 2025.07.23~49056d17-r1
 Depends: libc, libjson-c5, libubox20240329
@@ -318,6 +361,28 @@ Filename: libbpf1_1.5.0-r1_aarch64_cortex-a53.ipk
 Size: 164717
 SHA256sum: 632e8d5c4f2678ace4ad562758c90355c2cc0cb929f76ae274e28b19d3edabc7
 Description:  libbpf is a library for loading eBPF programs and reading and manipulating eBPF objects from user-space.
+
+Package: libbz2-1.0
+Version: 1.0.8-r1
+Depends: libc
+Provides: libbz2
+Source: feeds/base/utils/bzip2
+SourceName: bzip2
+License: bzip2-1.0.8
+LicenseFiles: LICENSE
+Section: libs
+SourceDateEpoch: 1753272501
+URL: https://sourceware.org/bzip2/
+ABIVersion: -1.0
+CPE-ID: cpe:/a:bzip:bzip2
+Maintainer: Steven Barth <cyrus@openwrt.org>
+Architecture: aarch64_cortex-a53
+Installed-Size: 81920
+Filename: libbz2-1.0_1.0.8-r1_aarch64_cortex-a53.ipk
+Size: 26751
+SHA256sum: f735568dfed71054cbf131e7ed3928c240aa7e945952197dbf7c5f6315f2f3a5
+Description:  bzip2 is a freely available, patent free, high-quality
+ data compressor. This packages provides libbz2 library.
 
 Package: libcap
 Version: 2.69-r1
@@ -453,6 +518,26 @@ Size: 6296
 SHA256sum: 42dd3cb844ddad796ba338f0bd661718fee36a1b0fccbb2581960d7548920376
 Description:  Minimalistic JSON based scripting engine
 
+Package: libltdl7
+Version: 2.4.7-r1
+Depends: libc
+Provides: libltdl
+Source: feeds/base/libs/libtool
+SourceName: libtool
+License: GPL-2.0+
+LicenseFiles: COPYING
+Section: libs
+SourceDateEpoch: 1657472867
+URL: http://www.gnu.org/software/libtool/
+ABIVersion: 7
+CPE-ID: cpe:/a:gnu:libtool
+Architecture: aarch64_cortex-a53
+Installed-Size: 71680
+Filename: libltdl7_2.4.7-r1_aarch64_cortex-a53.ipk
+Size: 15933
+SHA256sum: f6c8c902469c0450f2e019fe64be18d967a56f0dfd1e2361b6a198da54bfd764
+Description:  A generic dynamic object loading library
+
 Package: liblua5.1.5
 Version: 5.1.5-r11
 Depends: libc
@@ -475,6 +560,30 @@ SHA256sum: 125aefeda4b92075c8dcd8a5e3d264ca790681925166f2bd4779356486ac2935
 Description:  Lua is a powerful light-weight programming language designed for extending 
  applications. Lua is also frequently used as a general-purpose, stand-alone 
  language. Lua is free software.
+ This package contains the Lua shared libraries, needed by other programs.
+
+Package: liblua5.3-5.3
+Version: 5.3.5-r6
+Depends: libc
+Provides: liblua5.3
+Source: feeds/base/utils/lua5.3
+SourceName: lua
+License: MIT
+LicenseFiles: COPYRIGHT
+Section: libs
+SourceDateEpoch: 1708131349
+URL: https://www.lua.org/
+ABIVersion: -5.3
+CPE-ID: cpe:/a:lua:lua
+Maintainer: Jo-Philipp Wich <jo@mein.io>
+Architecture: aarch64_cortex-a53
+Installed-Size: 276480
+Filename: liblua5.3-5.3_5.3.5-r6_aarch64_cortex-a53.ipk
+Size: 95473
+SHA256sum: c4839929b47a74166a2fd3017cf27b0525f5635e0fff0a229c49d1b3e9d46e7b
+Description:  Lua is a powerful, efficient, lightweight, embeddable scripting language. It
+ supports procedural programming, object-oriented programming, functional
+ programming, data-driven programming, and data description.
  This package contains the Lua shared libraries, needed by other programs.
 
 Package: libmnl0
@@ -516,6 +625,27 @@ Description:  libmnl is a minimalistic user-space library oriented to Netlink de
  * Decoupling: the interdependency of the main bricks that compose the library
  is reduced, i.e. the library provides many helpers, but the programmer is not
  forced to use them.
+
+Package: libmount1
+Version: 2.40.2-r1
+Depends: libc, libblkid1
+Provides: libmount
+Source: feeds/base/utils/util-linux
+SourceName: util-linux
+License: GPL-2.0-only
+LicenseFiles: COPYING libblkid/COPYING libmount/COPYING Documentation/licenses/COPYING.GPLv2 Documentation/licenses/COPYING.LGPLv2.1 libuuid/COPYING Documentation/licenses/COPYING.BSD-3
+Section: libs
+SourceDateEpoch: 1722099582
+URL: http://www.kernel.org/pub/linux/utils/util-linux/
+ABIVersion: 1
+CPE-ID: cpe:/a:kernel:util-linux
+Architecture: aarch64_cortex-a53
+Installed-Size: 399360
+Filename: libmount1_2.40.2-r1_aarch64_cortex-a53.ipk
+Size: 146511
+SHA256sum: 7de8e7de50cd542c11e1b785f79f9b5ca15990908835f4bfd4c59cff5b4200a2
+Description:  The libmount library is used to parse /etc/fstab, /etc/mtab and
+ /proc/self/mountinfo files, manage the mtab file, evaluate mount options...
 
 Package: libncurses6
 Version: 6.4-r2
@@ -715,6 +845,70 @@ Description:  The OpenSSL Project is a collaborative effort to develop a robust,
  general-purpose cryptography library.
  This package contains the OpenSSL shared libraries, needed by other programs.
 
+Package: libpcre2
+Version: 10.42-r1
+Depends: libc
+Source: feeds/base/libs/pcre2
+SourceName: pcre2
+License: BSD-3-Clause
+LicenseFiles: LICENCE
+Section: libs
+SourceDateEpoch: 1714212343
+URL: https://www.pcre.org/
+CPE-ID: cpe:/a:pcre:pcre2
+Maintainer: Shane Peelar <lookatyouhacker@gmail.com>
+Architecture: aarch64_cortex-a53
+Installed-Size: 409600
+Filename: libpcre2_10.42-r1_aarch64_cortex-a53.ipk
+Size: 115943
+SHA256sum: 680cd43ecf69bcd53f48bf98555d8ebab1cb00a2e9f30dcb319183a6537133c8
+Description:  A Perl Compatible Regular Expression library
+
+Package: libreadline8
+Version: 8.2-r2
+Depends: libc, libncursesw6
+Provides: libreadline
+Source: feeds/base/libs/readline
+SourceName: readline
+License: GPL-3.0-or-later
+LicenseFiles: COPYING
+Section: libs
+SourceDateEpoch: 1732819649
+URL: http://cnswww.cns.cwru.edu/php/chet/readline/rltop.html
+ABIVersion: 8
+CPE-ID: cpe:/a:gnu:readline
+Architecture: aarch64_cortex-a53
+Installed-Size: 430080
+Filename: libreadline8_8.2-r2_aarch64_cortex-a53.ipk
+Size: 140973
+SHA256sum: fb8abf686789bb8701ac260531d3fa4c508a925d54318ea5e0354816f6507432
+Description:  The Readline library provides a set of functions for use by applications
+ that allow users to edit command lines as they are typed in. Both Emacs
+ and vi editing modes are available. The Readline library includes
+ additional functions to maintain a list of previously-entered command
+ lines, to recall and perhaps reedit those lines, and perform csh-like
+ history expansion on previous commands.
+
+Package: libsmartcols1
+Version: 2.40.2-r1
+Depends: libc, librt
+Provides: libsmartcols
+Source: feeds/base/utils/util-linux
+SourceName: util-linux
+License: GPL-2.0-only
+LicenseFiles: COPYING libblkid/COPYING libmount/COPYING Documentation/licenses/COPYING.GPLv2 Documentation/licenses/COPYING.LGPLv2.1 libuuid/COPYING Documentation/licenses/COPYING.BSD-3
+Section: libs
+SourceDateEpoch: 1722099582
+URL: http://www.kernel.org/pub/linux/utils/util-linux/
+ABIVersion: 1
+CPE-ID: cpe:/a:kernel:util-linux
+Architecture: aarch64_cortex-a53
+Installed-Size: 204800
+Filename: libsmartcols1_2.40.2-r1_aarch64_cortex-a53.ipk
+Size: 62893
+SHA256sum: c58f2910dcf03448512ddbcc6477fc946269a1dcd21925f00c805bc3b8592839
+Description:  The smartcols library is used to print tables and trees in a pretty way.
+
 Package: libubox20240329
 Version: 2025.07.23~49056d17-r1
 Depends: libc
@@ -766,6 +960,22 @@ Filename: libubus20250102_2025.10.17~60e04048-r1_aarch64_cortex-a53.ipk
 Size: 13224
 SHA256sum: c52344f88ea3f3b74cbe44f197a7d9d0fba6adad9818ba9294e8167f9c8193ec
 Description:  OpenWrt RPC client library
+
+Package: libuci-lua
+Version: 2025.01.20~16ff0bad-r1
+Depends: libc, libuci20250120, liblua5.1.5
+Source: feeds/base/system/uci
+SourceName: uci
+License: LGPL-2.1
+Section: libs
+SourceDateEpoch: 1737407871
+Maintainer: Felix Fietkau <nbd@nbd.name>
+Architecture: aarch64_cortex-a53
+Installed-Size: 71680
+Filename: libuci-lua_2025.01.20~16ff0bad-r1_aarch64_cortex-a53.ipk
+Size: 8297
+SHA256sum: b6e315794c049f46a536f466fe4959cc0754702ee479ba208cb3aa3e398a1946
+Description:  Lua plugin for UCI
 
 Package: libuci20250120
 Version: 2025.01.20~16ff0bad-r1
@@ -878,6 +1088,26 @@ Description:  The UUID library is used to generate unique identifiers for object
  generates UUIDs compatible with those created by the Open Software
  Foundation (OSF) Distributed Computing Environment (DCE) utility.
 
+Package: libxml2-16
+Version: 2.14.5-r2
+Depends: libc, libpthread, zlib
+Provides: libxml2
+Source: feeds/base/libs/libxml2
+SourceName: libxml2
+License: MIT
+LicenseFiles: Copyright
+Section: libs
+SourceDateEpoch: 1758314694
+URL: http://xmlsoft.org/
+ABIVersion: -16
+CPE-ID: cpe:/a:xmlsoft:libxml2
+Architecture: aarch64_cortex-a53
+Installed-Size: 1187840
+Filename: libxml2-16_2.14.5-r2_aarch64_cortex-a53.ipk
+Size: 480566
+SHA256sum: 11631c4c267f2d172f2301cf6c878250b3e072aefae8f86e3d6bf51636ddab55
+Description:  A library for manipulating XML and HTML resources.
+
 Package: logd
 Version: 2024.04.26~85f10530-r1
 Depends: libc, libubox20240329, libubus20250102, libblobmsg-json20240329, libudebug
@@ -981,6 +1211,24 @@ Filename: luci-i18n-turboacc-zh-cn_0_all.ipk
 Size: 1886
 SHA256sum: 4d8fa00156a8c608d3e2e940b2bede0933e9dc884d4bded781220698a7d47850
 Description:  Translation for luci-app-turboacc - 简体中文 (Simplified Chinese)
+
+Package: mount-utils
+Version: 2.40.2-r1
+Depends: libc, librt, libmount1, libsmartcols1
+Source: feeds/base/utils/util-linux
+SourceName: util-linux
+License: GPL-2.0-only
+LicenseFiles: COPYING libblkid/COPYING libmount/COPYING Documentation/licenses/COPYING.GPLv2 Documentation/licenses/COPYING.LGPLv2.1 libuuid/COPYING Documentation/licenses/COPYING.BSD-3
+Section: utils
+SourceDateEpoch: 1722099582
+URL: http://www.kernel.org/pub/linux/utils/util-linux/
+CPE-ID: cpe:/a:kernel:util-linux
+Architecture: aarch64_cortex-a53
+Installed-Size: 337920
+Filename: mount-utils_2.40.2-r1_aarch64_cortex-a53.ipk
+Size: 64403
+SHA256sum: c0d4044e495e54bc13fd3e9ce0d492b2ed9e2acff8e12bfe66921b32cd926fa1
+Description:  contains: mount, umount, findmnt
 
 Package: mt7986-wo-firmware
 Version: 20241110-r2
@@ -1199,6 +1447,26 @@ Filename: procd_2024.12.22~42d39376-r1_aarch64_cortex-a53.ipk
 Size: 63831
 SHA256sum: 87cf481615c4518421d4f0129ff1ec9ea6c9be70086574628866d2111155b949
 Description:  OpenWrt system process manager
+
+Package: resolveip
+Version: 2
+Depends: libc
+Source: feeds/base/network/utils/resolveip
+SourceName: resolveip
+License: GPL-2.0
+Section: utils
+SourceDateEpoch: 1476524212
+Maintainer: Jo-Philipp Wich <jo@mein.io>
+Architecture: aarch64_cortex-a53
+Installed-Size: 71680
+Filename: resolveip_2_aarch64_cortex-a53.ipk
+Size: 2758
+SHA256sum: 0edd17393b3bfbc0cbfae49ccca5fb64379b936ceb18b7a7da9e22cf5dcf8f57
+Description:  This package contains the small resolveip utility which
+ can be used by scripts to turn host names into numeric
+ IP addresses. It supports IPv4 and IPv6 resolving and
+ has a configurable timeout to guarantee a certain maximum
+ runtime in case of slow or defunct DNS servers.
 
 Package: rpcd-mod-file
 Version: 2025.09.01~bba95191-r1
